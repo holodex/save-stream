@@ -12,29 +12,29 @@ describe('save-stream', function () {
         array(data)
             .pipe(save())
             .pipe(assert.length(data.length))
-            .on('end', done);
+            .pipe(assert.end(done));
     });
 
     it('should save data into buffer', function (done) {
         var saved = save();
         array(data)
             .pipe(saved)
-            .on('finish', function () {
+            .pipe(assert.end(function () {
                 saved._buffer.should.have.length(data.length);
                 done();
-            });
+            }));
     });
 
     it('should load saved data', function (done) {
         var saved = save();
         array(data)
             .pipe(saved)
-            .on('finish', function () {
+            .pipe(assert.end(function () {
                 saved
                     .load()
                     .pipe(assert.length(data.length))
-                    .on('end', done);
-            });
+                    .pipe(assert.end(done));
+            }));
     });
 
     it('should get data, that comes after load call', function (done) {
@@ -43,7 +43,7 @@ describe('save-stream', function () {
         saved.write(2);
         saved.load()
             .pipe(assert.length(3))
-            .on('end', done);
+            .pipe(assert.end(done))
         setTimeout(function () {
             saved.write(3);
             saved.end();
