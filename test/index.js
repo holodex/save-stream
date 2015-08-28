@@ -50,4 +50,14 @@ describe('save-stream', function () {
         }, 10);
     });
 
+    it('should get data, that is piped after load call', function (done) {
+        var saved = save();
+        saved.load()
+            .pipe(assert.length(data.length))
+            .pipe(assert.end(done));
+        setTimeout(function () {
+            array(data)
+                .pipe(saved);
+        }, 10);
+    })
 });
